@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block nav %}
+<a class="btn-nav" id="btn-new-student">Novo Aluno</a>
+<a class="btn-nav">Mensalidades</a>
+<a class="btn-nav">Novo Aluno</a>
+
+{% endblock %}
+
+
+{% block title_page %}
+Novo Aluno
+{% endblock %}
+
+
+
+
+{% block main %}
+<div class="container form">
+
+<form method="post" id="student_form" class="form_control form-control-sm">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+
+</form>
+</div>
+
+
+
+
+<script>
+    
+    
+    const btn_student = document.getElementById('btn-new-student')
+    const buttonsNav = document.querySelectorAll('.btn-nav')
+
+
+    buttonsNav.forEach(function(button){
+     buttonsNav.forEach(function(btn){
+            btn.classList.remove('btn-active')
+           })
+        })
+ 
+    console.log("funciona")
+    btn_student.classList.add('btn-active')
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block nav %}
+<a href="{% url 'new_fee_type' %}" class="btn-nav-school" id="btn-new-fee">Nova Mensalidade</a>
+<a href="{% url 'activities_new' %}" class="btn-nav-school" id="btn-new-activity">Nova Atividade</a>
+<a href="{% url 'teachers_new' %}" class="btn-nav-school" id="btn-new-teacher">Novo Professor</a>
+<a href="{% url 'school_manager' %}"  class="btn-nav-school" id="btn-manage-school">Gerir Escola</a>
+
+{% endblock %}
+
+{% block title_page %}
+Novo Professor
+{% endblock %}
+
+
+{% block main %}
+<div class="container form">
+
+<form method="post"  class="form_control form-control-sm">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+
+</form>
+</div>
+ 
+<script>
+    
+    
+    const btn_new_teacher = document.getElementById('btn-new-teacher')
+    const buttonsNav = document.querySelectorAll('.btn-nav-school')
+
+
+    buttonsNav.forEach(function(button){
+     buttonsNav.forEach(function(btn){
+            btn.classList.remove('btn-active')
+           })
+        })
+ 
+    console.log("funciona")
+    btn_new_teacher.classList.add('btn-active')
+
+</script>
+
+{% endblock %}

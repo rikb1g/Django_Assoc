@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block nav %}
+<a href="{% url 'new_fee_type' %}" class="btn-nav-school" id="btn-new-fee">Nova Mensalidade</a>
+<a href="{% url 'activities_new' %}" class="btn-nav-school" id="btn-new-activity">Nova Atividade</a>
+<a href="{% url 'teachers_new' %}" class="btn-nav-school" id="btn-new-teacher">Novo Professor</a>
+<a href="{% url 'school_manager' %}" class="btn-nav-school" id="btn-manage-school">Gerir Escola</a>
+
+{% endblock %}
+{% block title_page %}
+Gestão {{ school }}
+{% endblock %}
+
+{% block main %}
+<div class="container">
+    <p class="fs-3 text-center mt-3"><b>Atividades</b></p>
+    <a data-bs-toggle="modal" data-bs-target="#insertActivitieModal" class="btn-add-activity"><img
+            src="{% static 'images/add_circle.svg' %}" alt=""></a>
+
+    <table class="table custom-table">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Nº inscritos</th>
+                <th scope="col">Valor</th>
+                <th scope="col">Operações</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            {% for activity in activities %}
+            <tr>
+                <th scope="row"> {{activity.id}}</th>
+                <td>{{activity.name}}</td>
+                <td>{{activity.students.count}}</td>
+                <td>{{activity.value}}</td>
+                <td>
+                    <a onclick="delete_activity('{{activity.name}}','{{activity.id}}')"><img src="{% static 'images/delete.svg' %}"></a>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#editActivitieModal" class="btn-edit-activity"
+                        data-id="{{ activity.id }}"><img src="{% static 'images/edit.svg' %}"></a>
+
+                </td>
+            </tr>
+
+            {% endfor %}
+        </tbody>
+        <!-- 
+Edit activities modal
+ -->
+        <div class="modal fade" id="editActivitieModal" tabindex="-1" aria-labelledby="editActivitieModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editActivitieModalLabel">Inserir Atividade</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form method="POST" id="editActivityForm" class="form_control form-control-sm">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="Activityname">Nome</label>
+                                <input type="text" class="form-control" id="Activityname" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="Activityvalue">Valor</label>
+                                <input type="text" class="form-control" id="Activityvalue" name="value" required>
+                            </div>
+
+
+                            <button class="btn btn-primary" type="submit">Guardar</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+            <!-- Insert new activity modal -->
+            <div class="modal fade" id="insertActivitieModal" tabindex="-1" aria-labelledby="insertActivitieModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="insertActivitieModalLabel">Editar Atividade</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <form method="POST" id="insertActivityForm" class="form_control form-control-sm">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="Activityname">Nome</label>
+                                    <input type="text" class="form-control" id="Activityname" name="name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="Activityvalue">Valor</label>
+                                    <input type="text" class="form-control" id="Activityvalue" name="value" required>
+                                </div>
+
+
+                                <button class="btn btn-primary" type="submit">Guardar</button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+    </table>
+
+
+
+    <p class="fs-3 text-center mt-5"><b>Professores</b></p>
+    <a href="#" class="btn-add-teacher"><img src="{% static 'images/add_circle.svg' %}" alt=""></a>
+    <table class="table custom-table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Disciplina</th>
+                <th scope="col">Horário</th>
+                <th scope="col">Operações</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            {% for teacher in teachers %}
+            <th scope="row">{{teacher.id}}</th>
+            <td>{{teacher.name}}</td>
+            <td>{{teacher.activity.name}}</td>
+            <td>{{teacher.activity.class_schedule}}</td>
+            <td>
+                <a href="#"><img src="{% static 'images/delete.svg' %}"></a>
+                <a href="#" class="btn-edit-teacher"><img src="{% static 'images/edit.svg' %}"></a>
+            </td>
+
+            {% endfor %}
+        </tbody>
+
+
+    </table>
+
+    <p class="fs-3 text-center mt-5"><b>Mensalidades</b></p>
+    <a href="#" class="btn-add-fee"><img src="{% static 'images/add_circle.svg' %}" alt=""></a>
+    <table class="table custom-table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Valor</th>
+                <th scope="col">Operações</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            {% for fee in fees %}
+            <tr>
+                <th scope="row">{{fee.id }}</th>
+                <td>{{fee.name}}</td>
+                <td>{{fee.value}}</td>
+                <td>
+                    <a href="#"><img src="{% static 'images/delete.svg' %}"></a>
+                    <a href="#" class="btn-edit-fee"><img src="{% static 'images/edit.svg' %}"></a>
+                </td>
+            </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+<script src="{% static 'js/school.js' %}"></script>
+{% endblock %}

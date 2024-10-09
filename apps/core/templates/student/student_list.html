@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Alunos{% endblock %}
+
+{% block nav %}
+<a class="btn-nav">Novo Aluno</a>
+<a class="btn-nav">Atividades</a>
+<a class="btn-nav">Histórico</a>
+
+{% endblock %}
+
+{% block title_page %} Alunos {% endblock %}
+
+{% block search %}
+<input type="text" id="search_names" name="search_names" placeholder="Pesquisar nomes">
+{% endblock %}
+
+
+
+
+{% block main %}
+<table class="table custom-table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Ano Ingresso</th>
+            <th scope="col">Atividades</th>
+            <th scope="col">Mensaliadde</th>
+            <th scope="col">Operações</th>
+        </tr>
+    </thead>
+    <tbody class="table-group-divider">
+        {% for student in students_list %}
+        <tr>
+            <th scope="row">{{student.id}}</th>
+            <td>{{student.name}}</td>
+            <td>{{student.entry_year}}</td>
+            <td>
+                {% if student.activity.all %}
+                {% for activity in student.activity.all %}
+                {{activity.name}} |
+                {% endfor %}
+                {% else %}
+                Nenhuma atividade
+                {% endif %}
+            </td>
+            <td>{{student.value_fee_calcutator}}</td>
+            <td>
+                <a href="#"><img src="{% static 'images/delete.svg' %}"></a>
+                <a href="#" class="btn-edit-student" data-id="{{ student.id }}" data-bs-toggle="modal" data-bs-target="#editStudentModal"><img
+                        src="{% static 'images/edit.svg' %}"></a>
+
+                <a href="#" data-bs-target="#staticBackdrop"><img src="{% static 'images/restart.svg' %}"></a>
+                <a href="#"><img src="{% static 'images/person-cancel.svg' %}"></a>
+
+
+            </td>
+
+        </tr>
+        {% endfor %}
+    </tbody>
+
+
+
+<div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editStudentModalLabel">Editar Aluno</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            </div>
+            <div class="modal-body">
+                <form id="editStudentForm" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="studentName" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="studentName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="studentEntryYear" class="form-label">Ano Ingresso</label>
+                        <input type="text" class="form-control" id="studentEntryYear" name="entry_year" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="studenteducationOfficer" class="form-label">Encarregado de Educação</label>
+                        <input type="text" class="form-control" id="studenteducationOfficer" name="education_officer"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="studentphoneNumeberOfficer" class="form-label">Contacto</label>
+                        <input type="text" class="form-control" id="studentphoneNumeberOfficer" name="phone_numeber_officer"
+                            required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="activitySelect" class="form-label">Atividades</label>
+                        <select class="form-select" id="activitySelect" name="activity" multiple
+                            aria-label="multiple select example">                        
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="feeSelect" class="form-label">Mensalidade</label>
+                        <select class="form-select" id="feeSelect" name="fee" multiple
+                            aria-label="multiple select example">                        
+                        </select>
+                    </div>
+                    
+
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+</table>
+
+<script src="{% static 'js/students.js' %}"></script>
+
+{% endblock %}
