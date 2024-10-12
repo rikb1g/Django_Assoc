@@ -134,30 +134,57 @@ def edit_student(request, student_id):
 
     return JsonResponse(student_data)
 
-@require_http_methods(['GET', 'POST'])
-def edit_type_fee(request, fee_id):
-    fee = get_object_or_404(TypeFee, id=fee_id)
 
-    if request.method == 'POST':
-        form = TypeFeeForm(request.POST, instance=fee)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'success': True})
-        else:
-            return JsonResponse({'success': False, 'errors': form.errors}, status=400)
-
-    fee_data = {
-        'name': fee.name,
-    }
-
-    return JsonResponse(fee_data)
 
 def get_all_fees(request):
     fees = TypeFee.objects.all().values('id', 'name')
     return JsonResponse(list(fees), safe=False)
 
 
-        
 
+@require_http_methods(['GET', 'POST'])
+def update_type_fee(request, pk):
+    fee = get_object_or_404(TypeFee, pk=pk)
+    form = TypeFeeForm(request.POST, instance=fee)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+    
+    type_fee_data = {
+        'name': fee.name,
+        'value': fee.value,
+    }
+
+    return JsonResponse(type_fee_data)
+ 
+def add_type_fee(request):
+    form = TypeFeeForm(request.POST)
+    form.instance.school = request.user.user.school
+    if form.is_valid():
+        form.save()
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+    
+
+def delete_type_fee(request, pk):
+    fee = get_object_or_404(TypeFee, pk=pk)
+    if fee:
+        fee.delete()
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False}, status=400)
+    
+
+def delete_student(request, pk):
+    student = get_object_or_404(Student, pk=pk)
+    if student:
+        student.delete()
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False}, status=400)
 
     

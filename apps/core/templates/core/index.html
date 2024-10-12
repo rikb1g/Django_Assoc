@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+
+
 {% block nav %}
 <a class="btn-nav">Novo Aluno</a>
 <a class="btn-nav">Mensalidades</a>
@@ -7,7 +9,11 @@
 
 {% endblock %}
 
+{% block ano %}
 
+    {{ user.user.school.scholl_year }}
+
+{% endblock %}
 
 {% block main %}
 

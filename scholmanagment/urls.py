@@ -12,6 +12,6 @@ urlpatterns = [
     path("student/", include("apps.student.urls"),name="student"),
     #path("user/", include("apps.user.urls"),name="user"),
     #path("employees/", include("apps.employees.urls"),name="employees"),
-    #path("finance/", include("apps.financeManagment.urls"),name="finance"),
+    path("finance/", include("apps.financeManagment.urls"),name="finance"),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

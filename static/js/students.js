@@ -1,3 +1,18 @@
+// Função para obter o token CSRF
+function getCSRFToken() {
+    let csrfToken = null;
+    const cookies = document.cookie.split(';');
+    cookies.forEach(cookie => {
+        const [name, value] = cookie.trim().split('=');
+        if (name === 'csrftoken') {
+            csrfToken = value;
+        }
+    });
+    return csrfToken;
+}
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.btn-edit-student').forEach(button => {
         button.addEventListener('click', function () {
@@ -116,3 +131,28 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     });
 });
+
+
+function deleteStudent(studentId, name) {
+    if (confirm(`Tem certeza que deseja excluir o aluno ${name}?`)) {
+        fetch(`/student/student_delete/${studentId}/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': getCSRFToken()
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Aluno excluído com sucesso');
+                    location.reload();
+                } else {
+                    alert('Erro: ' + JSON.stringify(data.errors));
+                }
+            })
+            .catch(error => {
+                console.log('Erro ao excluir o aluno:', error);
+            });
+    }
+
+}

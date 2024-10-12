@@ -67,7 +67,6 @@ def get_all_activities(request):
 @require_http_methods(['GET', 'POST'])
 def edit_activity(request, activity_id):
     activitie = get_object_or_404(Activities, id=activity_id)
-    print(activitie)
     if request.method == 'POST':
         form = ActivitiesForm(request.POST, instance=activitie)
         for a in form:
@@ -86,6 +85,28 @@ def edit_activity(request, activity_id):
 
     return JsonResponse(activitie_data)
 
+@require_http_methods(['GET', 'POST'])
+def update_teacher(request, teacher_id):
+    teacher = get_object_or_404(Teacher, id=teacher_id)
+    print(teacher)
+    
+    if request.method == 'POST':
+        form = TeacherForm(request.POST, instance=teacher)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+    teacher_data = {
+        'name': teacher.name,
+        'phone': teacher.phone,
+        'email': teacher.email,
+        'class_schedule': teacher.class_schedule,
+        'activity': teacher.activity.id,  
+    }
+    return JsonResponse(teacher_data)
+
+
 
 def add_activity(request):
     form = ActivitiesForm(request.POST)
@@ -96,6 +117,14 @@ def add_activity(request):
     else:
             return JsonResponse({'success': False, 'errors': form.errors}, status=400)
     
+def add_teacher(request):
+    form = TeacherForm(request.POST)
+    form.instance.school = request.user.user.school
+    if form.is_valid():
+        form.save()
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False, 'errors': form.errors}, status=400)
 
 def delete_activity(request, pk):
     activity = get_object_or_404(Activities, pk=pk)
@@ -104,4 +133,14 @@ def delete_activity(request, pk):
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'success': False}, status=400)
+    
+def delete_teacher(request, pk):
+    teacher = get_object_or_404(Teacher, pk=pk)
+    if teacher:
+        teacher.delete()
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False}, status=400)
+    
+
     

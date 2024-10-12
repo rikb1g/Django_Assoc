@@ -44,9 +44,9 @@
           <a class="btn-bar-side" href="">Nova mensalidade</a>
           <a class="btn-bar-side" href="">Mensaliades em atraso</a>
         </div>
-
+        <!-- Finance -->
         <div class="btn-bar-group">
-          <a class="btn-bar-side" href="">Gestão finaceira</a>
+          <a class="btn-bar-side" href="{% url 'finance_global' %}">Gestão finaceira</a>
           <p></p>
           <a class="btn-bar-side" id="toggleButton3"><img src="{% static 'images/arrow_down.svg' %}" alt=""></a>
         </div>
@@ -55,7 +55,7 @@
           <a class="btn-bar-side" href="">Nova Entrada</a>
           <a class="btn-bar-side" href="">Relatórios</a>
         </div>
-
+        <!-- schooll -->
         <div class="btn-bar-group">
           <a class="btn-bar-side" href="{% url 'school_manager' %}">Escola</a>
           <p></p>
@@ -67,12 +67,28 @@
           <a class="btn-bar-side" href="{% url 'teachers_new' %}">Novo Professor</a>
           <a class="btn-bar-side" href="{% url 'school_manager' %}">Gerir Escola</a>
         </div>
+        <!-- employees -->
+        <div class="btn-bar-group">
+          <a class="btn-bar-side" href="#">Funcionários</a>
+          <p></p>
+          <a class="btn-bar-side" id="toggleButton5"><img src="{% static 'images/arrow_down.svg' %}" alt=""></a>
+        </div>
+        <div class="hidden" id="moreButtons5">
+          <a class="btn-bar-side" href="#">Processar ordenado</a>
+          <a class="btn-bar-side" href="#">Recibos</a>
+          
+        </div>
 
 
       </div>
 
       <div class="col-10 offset-2 main-page">
         <div class="header">
+          <div>
+
+          {% block ano %} {% endblock %}
+
+          </div>
           <div class="logo-logout">
             <a href="{% url 'login' %}"><img src="{% static 'images/logout.svg' %}" alt=""></a>
           </div>

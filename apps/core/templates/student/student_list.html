@@ -48,7 +48,7 @@
             </td>
             <td>{{student.value_fee_calcutator}}</td>
             <td>
-                <a href="#"><img src="{% static 'images/delete.svg' %}"></a>
+                <a onclick="deleteStudent('{{ student.id }}','{{ student.name }}')"><img src="{% static 'images/delete.svg' %}"></a>
                 <a href="#" class="btn-edit-student" data-id="{{ student.id }}" data-bs-toggle="modal" data-bs-target="#editStudentModal"><img
                         src="{% static 'images/edit.svg' %}"></a>
 

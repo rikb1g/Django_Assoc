@@ -17,9 +17,10 @@ def create_montly_payment(sender, instance, created, **kwargs):
         for month in range(9,9+ number_of_fees):
             month_year = divmod(month -1 ,12)
             current_month = month_year[1] +1
-            current_year += month_year[0]
+            year = current_year + month_year[0]
 
-            payment_date = date(current_year,current_month,1)
+            payment_date = date(year,current_month,1)
+            print(payment_date)
 
             if current_month in [8,9]:
                 continue
@@ -30,6 +31,7 @@ def create_montly_payment(sender, instance, created, **kwargs):
                 isPaid= False,
                 isLate= False
             )
+            print(fee)
             fees.append(fee)
     if fees:
         MonthlyPayment.objects.bulk_create(fees)

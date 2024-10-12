@@ -24,7 +24,7 @@ class FinanceMovementsForm(forms.ModelForm):
     class Meta:
         model = FinanceMovements
         fields = ['moviment', 'category', 'billing_number','description', 'value', 'date', 'file']
-        widgjets = {
+        widgets = {
             'moviment': forms.Select(attrs={'class':'form-control'}),
             'category': forms.Select(attrs={'class':'form-control'}),
             'description': forms.TextInput(attrs={'class':'form-control'}),

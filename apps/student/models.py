@@ -27,7 +27,7 @@ class Student(models.Model):
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     education_officer = models.CharField(max_length=100)
     phone_numeber_officer = models.CharField(max_length=100)
-    activity = models.ManyToManyField(Activities,null=True, blank=True)
+    activity = models.ManyToManyField(Activities, blank=True)
     fee = models.ManyToManyField(TypeFee)
     active = models.BooleanField(default=True)
 

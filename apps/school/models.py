@@ -3,10 +3,18 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.urls import reverse
 
-# Create your models here.
+
+
+
 
 class School(models.Model):
+    YEAR_CHOICES = [
+        (f"{year}/{year+1}", f"{year}/{year+1}") for year in range(2024, 2034)
+    ]
+
     name = models.CharField(max_length=100)
+    scholl_year = models.CharField(max_length=9, choices=YEAR_CHOICES, default="2024/2025")
+
 
     def get_absolute_url(self):
         return reverse('home')
@@ -24,6 +32,11 @@ class Activities(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+    def student_count(self):
+        return self.student_set.count()
+
 
 
 class Teacher(models.Model):
