@@ -11,7 +11,7 @@ class TableIRS(models.Model):
 
 class Employee(models.Model):
     name = models.CharField(max_length=100, verbose_name="Nome")
-    security_system = models.FloatField(default=0.11)
+    security_system = models.FloatField(default=0.11, verbose_name="Seg Social")
     salary = models.FloatField(validators=[MinValueValidator(0)], verbose_name="Saláro")
     hours = models.IntegerField(default=20,validators=[MinValueValidator(0)], verbose_name="Horas")
     Irs = models.ManyToManyField(TableIRS,verbose_name="IRS")
@@ -29,8 +29,8 @@ class EmployeeSalary(models.Model):
     employee= models.ForeignKey(Employee,on_delete=models.CASCADE)
     start_date = models.DateField(verbose_name="Data de início")
     end_date = models.DateField( verbose_name="Data fim")
-    fouls = models.FloatField(validators=[MinValueValidator(0)], default=0)
-    value = models.FloatField(validators=[MinValueValidator(0)], default=0)
+    fouls = models.FloatField(validators=[MinValueValidator(0)], default=0, verbose_name="Falta em horas")
+    value = models.FloatField(validators=[MinValueValidator(0)], default=0, verbose_name="Valor de Salário")
 
     def __str__(self):
         return f"{self.employee} - data {self.start_date} a {self.end_date}"

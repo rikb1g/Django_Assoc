@@ -21,14 +21,14 @@ class TypeFee(models.Model):
 
 
 class Student(models.Model):
-    name = models.CharField(max_length=100)
-    entry_year = models.IntegerField()
-    out_year = models.IntegerField(blank=True, null=True)
+    name = models.CharField(max_length=100, verbose_name="Nome")
+    entry_year = models.IntegerField(verbose_name="Ano de Matrícula")
+    out_year = models.IntegerField(blank=True, null=True, verbose_name="Ano de saída")
     school = models.ForeignKey(School, on_delete=models.CASCADE)
-    education_officer = models.CharField(max_length=100)
-    phone_numeber_officer = models.CharField(max_length=100)
-    activity = models.ManyToManyField(Activities, blank=True)
-    fee = models.ManyToManyField(TypeFee)
+    education_officer = models.CharField(max_length=100, verbose_name="Nome Encarregado de educação")
+    phone_numeber_officer = models.CharField(max_length=100, verbose_name="Contacto Enc Educação")
+    activity = models.ManyToManyField(Activities, blank=True, verbose_name="Atividade")
+    fee = models.ManyToManyField(TypeFee, verbose_name="Mensalidade")
     active = models.BooleanField(default=True)
 
     def get_absolute_url(self):
@@ -45,7 +45,7 @@ class Student(models.Model):
         return self.name
 
 class MonthlyPayment(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, verbose_name="Estudante")
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     payment_date = models.DateTimeField(verbose_name='Data de pagamento')
     isPaid = models.BooleanField(default=False)
