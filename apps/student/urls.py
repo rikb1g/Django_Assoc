@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import StudentList, StudentCreate, StudentUpdate,TypeFeeCreate,student_remove, archive_student, edit_student, get_all_fees,add_type_fee, update_type_fee, delete_type_fee, delete_student
+from .views import StudentList, StudentCreate, StudentUpdate,TypeFeeCreate,student_remove, archive_student, edit_student, get_all_fees,add_type_fee, update_type_fee, delete_type_fee, delete_student, month_payment_global
 
 
 
@@ -16,4 +16,5 @@ urlpatterns = [
     path('add_fee_form/',add_type_fee, name='add_fee_form'),
     path('update_type_fee/<int:pk>/',update_type_fee, name='update_type_fee'),
     path('delete_type_fee_form/<int:pk>/',delete_type_fee, name='delete_type_fee'),
+    path('fees_global', month_payment_global, name='fees_global')
 ]

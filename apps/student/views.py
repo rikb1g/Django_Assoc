@@ -4,9 +4,12 @@ from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, CreateView
-from .models import Student, TypeFee
+from django.db.models import Q
+from django.db.models.functions import TruncMonth
+from .models import Student, TypeFee,MonthlyPayment
 from .forms import StudentForm, TypeFeeForm
 from apps.school.models import Activities
+from datetime import datetime
 
 
 
@@ -112,10 +115,8 @@ def archive_student(request, pk):
 @require_http_methods(['GET', 'POST'])
 def edit_student(request, student_id):
     student = get_object_or_404(Student, id=student_id)
-
     if request.method == 'POST':
         form = StudentForm(request.POST, instance=student)
-        print(form)
         if form.is_valid():
             form.save()
             return JsonResponse({'success': True})
@@ -131,7 +132,6 @@ def edit_student(request, student_id):
         'activity': list(student.activity.values_list('id', flat=True)),
         'fee': list(student.fee.values_list('id', flat=True)),
     }
-
     return JsonResponse(student_data)
 
 
@@ -186,5 +186,41 @@ def delete_student(request, pk):
         return JsonResponse({'success': True})
     else:
         return JsonResponse({'success': False}, status=400)
+    
+
+# Montly PAyment
+    
+def month_payment_global(request):
+    school_year = request.user.user.school.scholl_year
+    list_year = school_year.split('/')
+    year = list_year[0]
+    next_year = list_year[1]
+    current_month = datetime.now().strftime("%B")
+    print(current_month)
+
+
+    
+
+    months_current_year = [x for x in range(9,13)]
+    months_next_year = [x for x in range(1,9)]
+
+
+    payment_fee_per_month = (
+        MonthlyPayment.objects.filter(
+            Q(school= request.user.user.school),
+            Q(payment_date__year= year,payment_date__month__in=months_current_year) |
+            Q(payment_date__year=next_year,payment_date__month__in=months_next_year)
+        )    
+    )
+
+    context = {
+        'payment_fee_per_month': payment_fee_per_month,
+        'school_year': list_year[0],
+        'school_year_next': list_year[1],
+        'current_month': current_month,
+    }
+    return render(request, 'student/monthly_payment.html',context=context)
+
+    
 
     

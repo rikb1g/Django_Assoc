@@ -23,7 +23,6 @@
 <table class="table custom-table">
     <thead>
         <tr>
-            <th scope="col">Id</th>
             <th scope="col">Nome</th>
             <th scope="col">Ano Ingresso</th>
             <th scope="col">Atividades</th>
@@ -34,7 +33,6 @@
     <tbody class="table-group-divider">
         {% for student in students_list %}
         <tr>
-            <th scope="row">{{student.id}}</th>
             <td>{{student.name}}</td>
             <td>{{student.entry_year}}</td>
             <td>
@@ -69,7 +67,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editStudentModalLabel">Editar Aluno</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                
 
             </div>
             <div class="modal-body">

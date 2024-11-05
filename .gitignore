@@ -3,3 +3,4 @@
 venv
 *.pyc
 scholmanagment/__pycache__/
+settings.py

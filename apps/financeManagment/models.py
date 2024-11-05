@@ -6,12 +6,19 @@ from apps.school.models import School
 
 class TypeFinanceMoviment(models.Model):
     name = models.CharField(max_length=100)
+    
 
     def __str__(self):
         return self.name
 
 class CategoryFinanceMoviment(models.Model):
+    TYPE_CHOICES = [
+        ('income', 'Income'),
+        ('expense', 'Expense')
+    ]
+
     name = models.CharField(max_length=100)
+    type = models.CharField(max_length=100, choices=TYPE_CHOICES)
 
     def __str__(self):
         return self.name
@@ -21,7 +28,7 @@ class FinanceMovements(models.Model):
     category = models.ForeignKey(CategoryFinanceMoviment, on_delete=models.PROTECT,blank=True, null=True, verbose_name="Categoria")
     billing_number= models.CharField(max_length=100, blank=True, null=True, verbose_name="Número Fatura")
     description = models.CharField(max_length=100, blank=True, null=True)
-    file = models.FileField(upload_to=f'financeManager/{moviment.name}/', verbose_name="Ficheiro")
+    file = models.FileField(upload_to=f'financeManager/{moviment.name}/', verbose_name="Ficheiro",blank=True,null=True)
     value = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0)], verbose_name="Valor")
     date = models.DateField(null=True, blank=True, verbose_name="Data")
     school = models.ForeignKey(School, on_delete=models.CASCADE)

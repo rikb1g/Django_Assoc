@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.btn-edit-student').forEach(button => {
         button.addEventListener('click', function () {
             const studentId = button.dataset.id;
+            localStorage.setItem('studenID', studentId)
 
             // Faz a requisição fetch para buscar os dados do aluno
             fetch(`/student/student_update/${studentId}/`)
@@ -99,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return csrfToken;
         }
 
-        const studentId = document.querySelector('.btn-edit-student').dataset.id;
+        const studentId = localStorage.getItem('studenID')
         const formData = new FormData(form);
         for (const [key, value] of formData.entries()) {
             if (value === '') {

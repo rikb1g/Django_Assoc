@@ -5,7 +5,7 @@ from scholmanagment import settings
 
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("eumandoaqui/", admin.site.urls),
     path('', include('apps.core.urls'),name="home"),
     path("accounts/", include("django.contrib.auth.urls"),name="login"),
     path("school/", include("apps.school.urls"),name="school"),

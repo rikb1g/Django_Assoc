@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %} Mensalidades Alunos {% endblock %}
+
+
+{% block nav %}
+<a href="{% url 'fees_global' %}" class="btn-nav">Gerir Mensalidades</a>
+<a href="#" class="btn-nav">Nova Mensalidade</a>
+<a href="#" class="btn-nav">Mensalidades em Atraso</a>
+{% endblock %}
+
+
+{% block title_page %}
+Mensalidades
+{% endblock %}
+
+{% block search %}
+<label for="filterMonth" class="fs-9">Filtrar por mês: </label>
+<select id="filterMonth" class="form-select-sm">
+    <option value="">Todos</option>
+    <option value="October {{school_year}}">Outubro</option>
+    <option value="November {{school_year}}">Novembro</option>
+    <option value="December {{school_year}}">Dezembro</option>
+    <option value="January {{school_year_next}}">Janeiro</option>
+    <option value="February {{school_year_next}}">Fevereiro</option>
+    <option value="March {{school_year_next}}">Março</option>
+    <option value="April {{school_year_next}}">Abril</option>
+    <option value="May {{school_year_next}}">Maio</option>
+    <option value="June {{school_year_next}}">Junho</option>
+    <option value="July {{school_year_next}}">Julho</option>
+</select>
+{% endblock %}
+
+
+{% block main %}
+
+
+<table class="table mt-3">
+    
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Data</th>
+            <th>Valor</th>
+            <th>Paga</th>
+            <th>Operações</th>
+        </tr>
+    </thead>
+    <tbody>
+            
+            {% for mensalidade in payment_fee_per_month %}
+            <tr id="tableMontlyPayments" data-month="{{ mensalidade.payment_date|date:'F Y' }}">
+                <td id="studentName">{{mensalidade.student.name}}
+                <td id="studentDate">{{mensalidade.payment_date|date:"F Y" }}</td>
+                <td><input id="studentValue" type="text" class="form-control-sm" value="{{ mensalidade.student.value_fee_calcutator }}"></td>
+                <td><input type="checkbox" name="paga" id="paga" {% if mensalidade.paga %}checked{% endif %}></td>
+                <td><a href="#"><img src="{% static 'images/check.svg' %}" alt=""></a></td>
+            </tr>
+
+        {% endfor %}
+    </tbody>
+
+
+
+</table>
+
+
+<script src="{% static '/js/monthlyPayment.js' %}"></script>
+{% endblock %}
+
+

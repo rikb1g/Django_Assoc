@@ -17,15 +17,22 @@ Nova Despesa
 
 {% block main %}
 <div class="container form">
-    <form method="post" id="expense_new_form" class="form_control">
+    <form method="post" id="expense_new_form" class="form_control mt-3">
         {% csrf_token %}
         <div class="mb-3">
+            <div class="d-flex justify-content-between align-items-center">
             <label for="id_category">Categoria</label>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#newCategoryFinanceModal">
+                <img class="p-2" src="{% static 'images/add_circle.svg' %}" alt="Adicionar" />
+            </a>
+            </div>
             <div class="input-group">
                 {{ form.category }}
-                <img class="p-2" src="{% static 'images/add_circle.svg' %}" alt="Adicionar" />
+                
             </div>
+            
         </div>
+        
 
         <div class="mb-3">
             <label for="id_billing_number">Número Fatura</label>
@@ -68,4 +75,57 @@ Nova Despesa
     </form>
 </div>
 
-{% endblock %}
+
+
+
+
+<div class="modal" tabindex="-1" id="newCategoryFinanceModal" aria-labelledby="newCategoryFinance" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newCategoryFinanceModalLabel">Nova Categoria</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="newCategoryFinanceForm" action="{% url 'create_category_expense' %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="categoryName" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="categoryName" name="name" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <!-- Submit Button for AJAX -->
+                <button type="submit" form="newCategoryFinanceForm" class="btn btn-primary">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function(){
+        $('#newCategoryFinance form').on('submit',function(e){
+            e.preventDefault()
+            var fomrData = $(this).serialize()
+
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                data: FormData,
+                success: function (response){
+                    $('#newCategoryFinance').modal('hide')
+                    location.reload()
+                },
+                error: function(xhr, status, error){
+                    console.log('Form submission failed:', error)
+                }
+            })
+        })
+    })
+
+</script>
+        {% endblock %}
