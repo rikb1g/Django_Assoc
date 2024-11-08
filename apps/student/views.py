@@ -1,13 +1,14 @@
-from typing import Any
+import json
 from django.db.models.query import QuerySet
 from django.views.decorators.http import require_http_methods
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, CreateView
 from django.db.models import Q
-from django.db.models.functions import TruncMonth
+from django.core.exceptions import ObjectDoesNotExist
 from .models import Student, TypeFee,MonthlyPayment
 from .forms import StudentForm, TypeFeeForm
+from apps.financeManagment.models import FinanceMovements, CategoryFinanceMoviment, TypeFinanceMoviment
 from apps.school.models import Activities
 from datetime import datetime
 
@@ -23,13 +24,13 @@ class StudentList(ListView):
             form.save()
         return redirect('students_list')
     
-    def get_context_data(self, **kwargs: Any) -> Any:
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['activities'] = Activities.objects.all()
         print(context)
         return context
 
-    def get_queryset(self) -> QuerySet[Any]:
+    def get_queryset(self):
         query = self.request.GET.get('query_students')
         school = self.request.user.user.school
 
@@ -43,7 +44,7 @@ class StudentHistoric(ListView):
     model = Student
     context_object_name = 'historic_students_list'
 
-    def get_queryset(self) -> QuerySet[Any]:
+    def get_queryset(self):
         query = self.request.GET.get('query_students')
         school = self.request.user.user.school
 
@@ -69,6 +70,7 @@ class StudentCreate(CreateView):
         student = form.save(commit=False)
         student.school = self.request.user.user.school
         student.save()
+        FinanceMovements.objects.creat()
         
         return super().form_valid(form)
     
@@ -220,6 +222,97 @@ def month_payment_global(request):
         'current_month': current_month,
     }
     return render(request, 'student/monthly_payment.html',context=context)
+
+
+def insert_fee(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            fee_id = data.get('id')
+            value_fee = data.get('value')
+            print(fee_id)
+            print(value_fee)
+    
+            # Buscar e atualizar o pagamento da mensalidade
+            fee = MonthlyPayment.objects.get(id=fee_id)
+            fee.isPaid = True
+            fee.value = value_fee
+            fee.save()
+            
+        
+            category_type, _ = CategoryFinanceMoviment.objects.get_or_create(name='mensalidades',type='income')    
+            moviment_type, _ = TypeFinanceMoviment.objects.get_or_create(name='income')
+            
+
+            # Criar o movimento financeiro
+            try:
+                finance_moviment_exist = FinanceMovements.objects.get(description=f"{fee_id},{fee.student},{fee.payment_date}")
+                print(finance_moviment_exist)
+
+                finance_moviment_exist.value = fee.value
+                finance_moviment_exist.save()
+                print("salvou")
+
+            except FinanceMovements.DoesNotExist:
+                print("deu erro")
+                finance = FinanceMovements.objects.create(
+                    moviment= moviment_type,
+                    category= category_type,   
+                    description=f"{fee_id},{fee.student},{fee.payment_date}",
+                    date = fee.payment_date,
+                    value=value_fee,
+                    school= fee.school,
+                )
+                finance.save()
+                return JsonResponse({'success': True})        
+                
+            except Exception as e:
+                print(e)
+                return JsonResponse({'success': False, 'error': 'Erro ao criar movimento financeiro'})
+            
+            return JsonResponse({'success': True})
+        
+        except MonthlyPayment.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Mensalidade não encontrada'})
+        
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'error': 'Método não permitido.'})
+
+
+def remove_fee(request):
+    if request.method == 'POST':
+        try:
+            data= json.loads(request.body)
+            fee_id = data.get('id')
+            fee = MonthlyPayment.objects.get(id=fee_id)
+            fee.value = ""
+            fee.isPaid = False
+            fee.save()
+
+            try: 
+                finance = FinanceMovements.objects.get(description=f"{fee_id},{fee.student},{fee.payment_date}")
+                if finance:
+                    finance.delete()
+                    return JsonResponse({'success': True})
+            except FinanceMovements.DoesNotExist:
+                return JsonResponse({'success': True})
+
+
+        except MonthlyPayment.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Mensalidade não existe'})
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+        
+        return JsonResponse({'success': True})
+    
+    return JsonResponse({'success': False, 'error': 'Método não permitido.'})
+
+
+        
+
 
     
 

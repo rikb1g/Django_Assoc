@@ -54,9 +54,21 @@ Mensalidades
             <tr id="tableMontlyPayments" data-month="{{ mensalidade.payment_date|date:'F Y' }}">
                 <td id="studentName">{{mensalidade.student.name}}
                 <td id="studentDate">{{mensalidade.payment_date|date:"F Y" }}</td>
-                <td><input id="studentValue" type="text" class="form-control-sm" value="{{ mensalidade.student.value_fee_calcutator }}"></td>
-                <td><input type="checkbox" name="paga" id="paga" {% if mensalidade.paga %}checked{% endif %}></td>
-                <td><a href="#"><img src="{% static 'images/check.svg' %}" alt=""></a></td>
+                {% if mensalidade.isPaid %}
+                <td id="studentValueP_{{mensalidade.id}}">{% if mensalidade.value %}
+                    {{mensalidade.value}}
+                    {% else %}
+                    {{ mensalidade.student.value_fee_calcutator }}</td>
+                    {% endif %}
+                {% else %}
+                <td><input id="studentValue_{{mensalidade.id}}" type="text" class="form-control-sm" value="{{ mensalidade.student.value_fee_calcutator }}"></td>
+                {% endif %}
+                <td><input type="checkbox" name="paga" id="isPaid_{{mensalidade.id}}" {% if mensalidade.isPaid %}checked{% endif %} class="nao-alteravel"></td>
+                {% if mensalidade.isPaid  %}
+                <td id="imageTdOPe_{{mensalidade.id}}"><a onclick="uptdateFee('{{mensalidade.id}}')" href="#"><img src="{% static 'images/edit.svg'%}" alt="editar"></a></td>
+                {% else %}
+                <td><a href="#" onclick="checkfee('{{mensalidade.id}}')"><img src="{% static 'images/check.svg' %}" alt=""></a></td>
+                {% endif %}
             </tr>
 
         {% endfor %}
@@ -66,8 +78,11 @@ Mensalidades
 
 </table>
 
-
-<script src="{% static '/js/monthlyPayment.js' %}"></script>
+<script>
+    const checkImageUrl = "{% static 'images/check.svg' %}";
+    const closeImageUrl = "{% static 'images/close.svg' %}";
+</script>
+<script src="{% static '/js/monthlyPayment.js' %}?v=1.1"></script>
 {% endblock %}
 
 

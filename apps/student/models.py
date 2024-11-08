@@ -48,6 +48,7 @@ class MonthlyPayment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, verbose_name="Estudante")
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     payment_date = models.DateTimeField(verbose_name='Data de pagamento')
+    value = models.CharField(max_length=100, null=True, blank=True)
     isPaid = models.BooleanField(default=False)
     isLate = models.BooleanField(default=False)
 
