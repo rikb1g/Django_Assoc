@@ -6,7 +6,7 @@
 {% block nav %}
 <a href="{% url 'new_expense' %}" class="btn-nav" id="btn-finance-expense">Nova Despesa</a>
 <a href="{% url 'new_income' %}" class="btn-nav" id="btn-manage-income">Nova Entrada</a>
-<a href="#" class="btn-nav" id="btn-manage-reports">Relatórios</a>
+<a href="{% url 'finance_moviments_list' %}" class="btn-nav" id="btn-manage-reports">Lista de movimentos</a>
 
 {% endblock %}
 

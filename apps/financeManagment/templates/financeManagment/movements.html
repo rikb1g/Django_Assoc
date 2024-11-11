@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block nav %}
+<a href="{% url 'new_expense' %}" class="btn-nav" id="btn-finance-expense">Nova Despesa</a>
+<a href="{% url 'new_income' %}" class="btn-nav" id="btn-manage-income">Nova Entrada</a>
+<a href="{% url 'finance_moviments_list' %}" class="btn-nav" id="btn-manage-reports">Lista de movimentos</a>
+{% endblock %}
+
+{% block title_page %}
+Lista de Movimentos 
+{% endblock %}
+
+
+{% block search %}
+<label for="filterMonth" class="fs-9">Filtrar por mês: </label>
+<select id="filterMonth" class="form-select-sm">
+    <option value="">Todos</option>
+    <option value="October {{school_year}}">Outubro</option>
+    <option value="November {{school_year}}">Novembro</option>
+    <option value="December {{school_year}}">Dezembro</option>
+    <option value="January {{school_year_next}}">Janeiro</option>
+    <option value="February {{school_year_next}}">Fevereiro</option>
+    <option value="March {{school_year_next}}">Março</option>
+    <option value="April {{school_year_next}}">Abril</option>
+    <option value="May {{school_year_next}}">Maio</option>
+    <option value="June {{school_year_next}}">Junho</option>
+    <option value="July {{school_year_next}}">Julho</option>
+</select>
+{% endblock %}
+
+
+
+{% block main %}
+<div class="container d-flex flex-column align-items-center">
+    <h2 class="mt-3" >Receitas</h2>
+
+    <table class="table mt-3" >
+        <thead>
+            <tr>
+                <th>Categoria</th>
+                <th>Fatura nº</th>
+                <th>Descrição</th>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Operações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in income_per_month %}
+            {% if item.total %}
+                <!-- Linha para o total agregado de 'mensalidades' -->
+                <tr class="table-Fees-Movements" data-month="{{ item.month|date:'F Y' }}">
+                    <td>Mensalidades</td>
+                    <td>-</td>
+                    <td>Total do Mês</td>
+                    <td>{{ item.month|date:"F Y" }}</td>
+                    <td>{{ item.total }}</td>
+                    <td>-</td>
+                </tr>
+            {% else %}
+                <!-- Linha para itens individuais de outras categorias -->
+                <tr class="table-Income" data-month="{{ item.date|date:'F Y'}}">
+                    <td>{{ item.category.name }}</td>
+                    <td>{{ item.billing_number }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.date|date:"F j, Y" }}</td>
+                    <td>{{ item.value }}</td>
+                    <td><a href="#"><img src="{% static 'images/edit.svg' %}" alt=""></a>
+                        <a href="#"><img src="{% static 'images/delete.svg' %}" alt=""></a>
+                    {% if item.file %}<a href="#"><img src="{% static 'images/file.svg' %}" alt=""></a> 
+                    {% endif %}
+                </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+
+    </table>
+
+    <hr>
+
+    <h2 class="mt-3" >Despesas</h2>
+
+    <table class="table mt-3" id="tableExpense">
+        <thead>
+            <tr>
+                <th>Categoria</th>
+                <th>Fatura nº</th>
+                <th>Descrição</th>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Operações</th>
+            </tr>
+        </thead>
+        <tbody>
+                {% for expense in  expense_per_month %}
+            <tr class="table-expense" data-month="{{ expense.date|date:'F Y'}}">
+                <td>{{expense.category}}</td>
+                <td>{{expense.billing_number}}</td>
+                <td>{{expense.description}}</td>
+                <td>{{expense.date|date:"F j, Y" }}</td>
+                <td>{{expense.value}}</td>
+                <td>
+                    <a href="#"><img src="{% static 'images/edit.svg' %}" alt=""></a>
+                    <a href="#"><img src="{% static 'images/delete.svg' %}" alt=""></a>
+                    {% if expense.file %} <a href="#"><img src="{% static 'images/file.svg' %}" alt=""></a> 
+                    {% endif %}
+                </td>
+            </tr>
+
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+
+
+
+
+</div>
+
+<script>
+    const checkImageUrl = "{% static 'images/check.svg' %}";
+    const closeImageUrl = "{% static 'images/close.svg' %}";
+</script>
+
+
+<script src="{% static '/js/movements.js' %}?v=1.0"></script>
+{% endblock %}

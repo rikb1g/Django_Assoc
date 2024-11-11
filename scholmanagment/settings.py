@@ -15,6 +15,8 @@ LOGIN_REDIRECT_URL = 'home'
 
 LOGOUT_REDIRECT_URL = 'login'
 
+CELERY_RESULT_BACKEND = 'django-db'
+
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -29,6 +31,7 @@ INSTALLED_APPS = [
     "apps.student",
     "apps.user",
     "apps.financeManagment",
+    "django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -119,3 +122,11 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
 
 LOGIN_URL = '/accounts/login/'
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELLET_ACEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+
+

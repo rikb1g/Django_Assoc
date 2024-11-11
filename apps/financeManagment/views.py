@@ -3,8 +3,9 @@ from django.forms import BaseModelForm
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from .models import FinanceMovements, TypeFinanceMoviment
-from django.db.models.functions import TruncMonth
+from django.db.models.functions import TruncMonth, Coalesce
 from django.db.models import Q, Sum
+from itertools import chain
 from django.views.generic.edit import CreateView
 from .forms import FinanceMovementsForm, CategoryFinanceMovimentForm
 
@@ -162,4 +163,53 @@ def create_category_expense(request):
         form = CategoryFinanceMovimentForm()
 
     return render(request, 'new_expense.html',{'form': form})
+
+
+def finance_moviments_list(request):
+    school_year = request.user.user.school.scholl_year
+    list_year = school_year.split('/')
+    year = int(list_year[0])
+    next_year = int(list_year[1])
+    months_current_year = [x for x in range(9, 13)]
+    months_next_year = [x for x in range(1, 9)]
+
+    # Consulta para as movimentações de outras categorias de income
+    income_others = FinanceMovements.objects.filter(
+        Q(school=request.user.user.school),
+        Q(moviment__name="income"),
+        ~Q(category__name='mensalidades'),
+        (Q(date__year=year, date__month__in=months_current_year) |
+         Q(date__year=next_year, date__month__in=months_next_year))
+    )
+
+    # Consulta para agregados de mensalidades por mês
+    fees_income = FinanceMovements.objects.filter(
+        Q(school=request.user.user.school),
+        Q(moviment__name="income"),
+        Q(category__name='mensalidades'),
+        (Q(date__year=year, date__month__in=months_current_year) |
+         Q(date__year=next_year, date__month__in=months_next_year))
+    ).annotate(month=TruncMonth('date')).values('month').annotate(total=Sum('value')).order_by('month')
+
+    # Combine ambas as listas em uma estrutura única de dados
+    combined_movements = list(chain(income_others, fees_income))
+
+    expense_month = FinanceMovements.objects.filter(
+        Q(school=request.user.user.school),
+        Q(moviment__name="expense"),
+        Q(date__year=year, date__month__in=months_current_year) |
+        Q(date__year=next_year, date__month__in=months_next_year)
+    )
+
+    context = {
+        'income_per_month': combined_movements,
+        'expense_per_month': expense_month,
+        'school_year': list_year[0],
+        'school_year_next': list_year[1],
+    }
+
+
+
+    return render(request, 'financeManagment/movements.html',context=context)
+
 
