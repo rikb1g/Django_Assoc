@@ -61,13 +61,13 @@ Mensalidades
                     {{ mensalidade.student.value_fee_calcutator }}</td>
                     {% endif %}
                 {% else %}
-                <td><input id="studentValue_{{mensalidade.id}}" type="text" class="form-control-sm" value="{{ mensalidade.student.value_fee_calcutator }}"></td>
+                <td id="studentValueP_{{mensalidade.id}}"><input id="studentValue_{{mensalidade.id}}" type="text" class="form-control-sm" value="{{ mensalidade.student.value_fee_calcutator }}"></td>
                 {% endif %}
                 <td><input type="checkbox" name="paga" id="isPaid_{{mensalidade.id}}" {% if mensalidade.isPaid %}checked{% endif %} class="nao-alteravel"></td>
                 {% if mensalidade.isPaid  %}
                 <td id="imageTdOPe_{{mensalidade.id}}"><a onclick="uptdateFee('{{mensalidade.id}}')" href="#"><img src="{% static 'images/edit.svg'%}" alt="editar"></a></td>
                 {% else %}
-                <td><a href="#" onclick="checkfee('{{mensalidade.id}}')"><img src="{% static 'images/check.svg' %}" alt=""></a></td>
+                <td id="imageCheck_{{mensalidade.id}}"><a href="#" onclick="checkfee('{{mensalidade.id}}')"><img src="{% static 'images/check.svg' %}" alt=""></a></td>
                 {% endif %}
             </tr>
 
@@ -81,6 +81,7 @@ Mensalidades
 <script>
     const checkImageUrl = "{% static 'images/check.svg' %}";
     const closeImageUrl = "{% static 'images/close.svg' %}";
+    const updateImageUrl = "{% static 'images/edit.svg' %}";
 </script>
 <script src="{% static '/js/monthlyPayment.js' %}?v=1.1"></script>
 {% endblock %}

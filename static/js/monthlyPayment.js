@@ -66,6 +66,7 @@ const currentDate = new Date();
 function checkfee(mensalidadeID){
 
     const studentValue = document.getElementById(`studentValue_${mensalidadeID}`)
+    const tdStudentValue = document.getElementById(`studentValueP_${mensalidadeID}`)
 
     if (isNaN(studentValue.value) || studentValue.value.trim() === "" ){
         alert("Por favor, insira um valor válido")
@@ -86,7 +87,30 @@ function checkfee(mensalidadeID){
     .then(data => {
         if (data.success){           
             alert("Mensalidade atualizada com sucesso")
-            location.reload();
+            studentValue.innerHTML = ''
+            tdStudentValue.innerHTML = ''
+            const pValue = document.createElement('p')
+            pValue.textContent = studentValue.value
+            tdStudentValue.appendChild(pValue)
+
+            // checar se o checkbox esta marcado
+            const isPaid = document.getElementById(`isPaid_${mensalidadeID}`)
+            isPaid.checked = true
+
+            const imageTd = document.getElementById(`imageCheck_${mensalidadeID}`)
+            imageTd.innerHTML = ''
+
+            const image_updateA = document.createElement('a')
+            const image_update = document.createElement('img')
+            image_update.src = updateImageUrl
+            image_update.alt = "Editar"
+            image_update.onclick = function(){ uptdateFee(mensalidadeID)}
+            image_updateA.appendChild(image_update)
+            imageTd.appendChild(image_updateA)
+
+            
+        
+
             
         }else {
             alert("Erro ao atualizar mensalidade")
@@ -147,6 +171,7 @@ function uptdateFee(mensalidadeID) {
 
         // change image
         imageTd.innerHTML = ''
+        
         const image_saveA = document.createElement('a')
         const image_save = document.createElement('img')
         

@@ -1,10 +1,12 @@
 from typing import Any
 from django.forms import BaseModelForm
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.http import HttpResponse, HttpResponseRedirect
+from django.views.generic.edit import UpdateView
+from django.shortcuts import get_object_or_404, redirect, render
 from .models import FinanceMovements, TypeFinanceMoviment
 from django.db.models.functions import TruncMonth, Coalesce
 from django.db.models import Q, Sum
+from django.urls import reverse_lazy
 from itertools import chain
 from django.views.generic.edit import CreateView
 from .forms import FinanceMovementsForm, CategoryFinanceMovimentForm
@@ -64,7 +66,7 @@ def finance_global(request):
     .aggregate(total=Sum('value'))
     )
 
-    summary = (total_expense['total'] if total_expense['total'] is not None else 0) - (total_income ['total'] if total_income['total'] is not None else 0 )
+    summary = (total_income ['total'] if total_income['total'] is not None else 0 ) -(total_expense['total'] if total_expense['total'] is not None else 0) 
 
     context = {
         'income_per_month': income_per_month,
@@ -211,5 +213,18 @@ def finance_moviments_list(request):
 
 
     return render(request, 'financeManagment/movements.html',context=context)
+
+
+class UptadeMovementFinancer(UpdateView):
+    model = FinanceMovements
+    form_class = FinanceMovementsForm
+    template_name = 'financeManagment/update_movements.html'
+    success_url = reverse_lazy('finance_moviments_list')
+
+
+def delete_movements(request, id):
+    moviment = get_object_or_404(FinanceMovements, id=id)
+    moviment.delete()
+    return HttpResponseRedirect(reverse_lazy('finance_moviments_list'))
 
 

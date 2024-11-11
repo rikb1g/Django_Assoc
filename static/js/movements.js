@@ -74,3 +74,10 @@ for (const option of filterMonthSelect.options) {
         }
     }
 
+
+function deleteMovement(id, description){
+    if (confirm(`Tem certeza que deseja excluir o movimento "${description}"?`)) {
+        console.log(`/financeManagment/delete_movements/${id}`)
+        window.location.href = `/finance/delete_movements/${id}/`;
+    }
+}

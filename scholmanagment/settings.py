@@ -1,11 +1,19 @@
 import os
 from pathlib import Path
 
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 SECRET_KEY = "django-insecure-8n#3(=&y9_qohr7&*4m9n*1lfpjfvo#1_1em5*t5l$48eq0sr+"
 
+
+"""
+DEBUG = False
+
+ALLOWED_HOSTS = ['APAJIR.pythonanywhere.com']
+"""
 
 DEBUG = True
 
@@ -31,7 +39,7 @@ INSTALLED_APPS = [
     "apps.student",
     "apps.user",
     "apps.financeManagment",
-    "django_celery_results",
+    #"django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -67,12 +75,7 @@ WSGI_APPLICATION = "scholmanagment.wsgi.application"
 
 
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+
 
 
 
@@ -114,7 +117,7 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR,"media")
 MEDIA_URL = "/media/"
 
-
+#STATIC_ROOT = os.path.join(BASE_DIR,  'staticfiles')
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_REDIRECT_URL = 'home'
@@ -124,9 +127,10 @@ LOGOUT_REDIRECT_URL = 'login'
 LOGIN_URL = '/accounts/login/'
 
 
-CELERY_BROKER_URL = 'redis://localhost:6379'
+
 CELLET_ACEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 
 
+from .local_settings import *

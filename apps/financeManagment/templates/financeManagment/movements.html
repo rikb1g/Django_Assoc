@@ -16,6 +16,7 @@ Lista de Movimentos
 <label for="filterMonth" class="fs-9">Filtrar por mês: </label>
 <select id="filterMonth" class="form-select-sm">
     <option value="">Todos</option>
+    <option value="September {{school_year}}">Setembro</option>
     <option value="October {{school_year}}">Outubro</option>
     <option value="November {{school_year}}">Novembro</option>
     <option value="December {{school_year}}">Dezembro</option>
@@ -26,6 +27,7 @@ Lista de Movimentos
     <option value="May {{school_year_next}}">Maio</option>
     <option value="June {{school_year_next}}">Junho</option>
     <option value="July {{school_year_next}}">Julho</option>
+    <option value="August {{school_year_next}}">Agosto</option>
 </select>
 {% endblock %}
 
@@ -66,8 +68,8 @@ Lista de Movimentos
                     <td>{{ item.description }}</td>
                     <td>{{ item.date|date:"F j, Y" }}</td>
                     <td>{{ item.value }}</td>
-                    <td><a href="#"><img src="{% static 'images/edit.svg' %}" alt=""></a>
-                        <a href="#"><img src="{% static 'images/delete.svg' %}" alt=""></a>
+                    <td><a href="{% url 'uptadeMovementFinancer' item.id %}"><img src="{% static 'images/edit.svg' %}" alt=""></a>
+                        <a onclick="deleteMovement('{{ item.id }}','{{ item.description }}')"><img src="{% static 'images/delete.svg' %}" alt=""></a>
                     {% if item.file %}<a href="#"><img src="{% static 'images/file.svg' %}" alt=""></a> 
                     {% endif %}
                 </td>
@@ -102,8 +104,8 @@ Lista de Movimentos
                 <td>{{expense.date|date:"F j, Y" }}</td>
                 <td>{{expense.value}}</td>
                 <td>
-                    <a href="#"><img src="{% static 'images/edit.svg' %}" alt=""></a>
-                    <a href="#"><img src="{% static 'images/delete.svg' %}" alt=""></a>
+                    <a href="{% url 'uptadeMovementFinancer' expense.id %}"><img src="{% static 'images/edit.svg' %}" alt=""></a>
+                    <a onclick="deleteMovement('{{ expense.id }}','{{ expense.description }}')"><img src="{% static 'images/delete.svg' %}" alt=""></a>
                     {% if expense.file %} <a href="#"><img src="{% static 'images/file.svg' %}" alt=""></a> 
                     {% endif %}
                 </td>

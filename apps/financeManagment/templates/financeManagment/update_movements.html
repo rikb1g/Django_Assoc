@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block title %}Nova Entrada{% endblock %}
+
+{% block nav %}
+<a href="{% url 'new_expense' %}" class="btn-nav" id="btn-finance-expense">Nova Despesa</a>
+<a href="{% url 'new_income' %}" class="btn-nav" id="btn-manage-income">Nova Entrada</a>
+<a href="{% url 'finance_moviments_list' %}" class="btn-nav" id="btn-manage-reports">Lista de movimentos</a>
+
+{% endblock %}
+
+{% block title_page %}
+Editar Movimento
+{% endblock %}
+
+
+{% block main %}
+
+    <form class="form-control" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div class="d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary me-2">Guardar</button>
+        <a href="{% url 'finance_moviments_list' %}" class="btn btn-danger">Sair</a>
+        
+        </div>
+
+    </form>
+    
+
+{% endblock %}
