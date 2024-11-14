@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-8n#3(=&y9_qohr7&*4m9n*1lfpjfvo#1_1em5*t5l$48eq0sr+"
 
 
-"""
+
 DEBUG = False
 
 ALLOWED_HOSTS = ['APAJIR.pythonanywhere.com']
@@ -18,6 +18,8 @@ ALLOWED_HOSTS = ['APAJIR.pythonanywhere.com']
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+"""
 
 LOGIN_REDIRECT_URL = 'home'
 
