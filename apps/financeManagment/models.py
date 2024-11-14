@@ -22,13 +22,17 @@ class CategoryFinanceMoviment(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+def file_upload_path(filename):
+    return f'financeManager/{filename}'
 
 class FinanceMovements(models.Model):
     moviment = models.ForeignKey(TypeFinanceMoviment, on_delete=models.CASCADE,blank=True, null=True)
     category = models.ForeignKey(CategoryFinanceMoviment, on_delete=models.PROTECT,blank=True, null=True, verbose_name="Categoria")
     billing_number= models.CharField(max_length=100, blank=True, null=True, verbose_name="Número Fatura")
     description = models.CharField(max_length=100, blank=True, null=True)
-    file = models.FileField(upload_to=f'financeManager/{moviment.name}/', verbose_name="Ficheiro",blank=True,null=True)
+    file = models.FileField(upload_to='FinanceManager/', verbose_name="Ficheiro",blank=True,null=True)
     value = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0)], verbose_name="Valor")
     date = models.DateField(null=True, blank=True, verbose_name="Data")
     school = models.ForeignKey(School, on_delete=models.CASCADE)

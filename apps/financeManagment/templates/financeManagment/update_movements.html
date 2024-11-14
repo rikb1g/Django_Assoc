@@ -19,9 +19,14 @@ Editar Movimento
 
 {% block main %}
 
-    <form class="form-control" method="post">
+    <form class="form-control" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
+        {% if form.instance.file %}
+        <div class="mb-3">
+            <p>Arquivo Atual: <a href="{{ form.instance.file.url }}" target="_blank">{{ form.instance.file.name }}</a></p>
+        </div>
+        {% endif %}
 
         <div class="d-flex justify-content-center">
         <button type="submit" class="btn btn-primary me-2">Guardar</button>

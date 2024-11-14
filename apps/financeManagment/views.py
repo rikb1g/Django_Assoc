@@ -221,6 +221,11 @@ class UptadeMovementFinancer(UpdateView):
     template_name = 'financeManagment/update_movements.html'
     success_url = reverse_lazy('finance_moviments_list')
 
+    def  form_valid(self, form: BaseModelForm) -> HttpResponse:
+        income = form.save(commit=False)
+        income.save()
+        return super().form_valid(form)
+
 
 def delete_movements(request, id):
     moviment = get_object_or_404(FinanceMovements, id=id)

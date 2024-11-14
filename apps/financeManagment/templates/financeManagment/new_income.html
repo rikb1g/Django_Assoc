@@ -16,7 +16,7 @@ Nova Entrada
 
 {% block main %}
 <div class="container form">
-    <form method="post" id="income_new_form" class="form_control mt-3">
+    <form method="post" id="income_new_form" class="form_control mt-3" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="mb-3">
             <div class="d-flex justify-content-between align-items-center">
@@ -86,7 +86,7 @@ Nova Entrada
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="newCategoryFinanceForm" action="{% url 'create_category_income' %}" method="post">
+                <form id="newCategoryFinanceForm" action="{% url 'create_category_income' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Nome</label>
@@ -109,12 +109,14 @@ Nova Entrada
     $(document).ready(function(){
         $('#newCategoryFinance form').on('submit',function(e){
             e.preventDefault()
-            var fomrData = $(this).serialize()
+            var formData = new FormData(this);
 
             $.ajax({
                 url: $(this).attr('action'),
                 method: 'POST',
-                data: FormData,
+                data: formData,
+                processData: false,
+                contentType: false,
                 success: function (response){
                     $('#newCategoryFinance').modal('hide')
                     location.reload()

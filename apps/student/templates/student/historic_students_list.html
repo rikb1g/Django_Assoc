@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Histórico de Alunos{% endblock %}
+
+{% block nav %}
+<a href="{% url 'new_student' %}" class="btn-nav">Novo Aluno</a>
+<a class="btn-nav">Atividades</a>
+<a href="{% url 'student_historic' %}" class="btn-nav">Histórico</a>
+
+{% endblock %}
+
+{% block title_page %} Histórico de alunos {% endblock %}

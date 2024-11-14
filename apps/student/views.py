@@ -39,10 +39,13 @@ class StudentList(ListView):
 
         if school:
             return Student.objects.filter(school=school, active=True)
-        
+
+
+
 class StudentHistoric(ListView):
     model = Student
     context_object_name = 'historic_students_list'
+    template_name = 'student/historic_students_list.html'
 
     def get_queryset(self):
         query = self.request.GET.get('query_students')
