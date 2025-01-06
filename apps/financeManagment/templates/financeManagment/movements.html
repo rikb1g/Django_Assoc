@@ -70,7 +70,7 @@ Lista de Movimentos
                     <td>{{ item.value }}</td>
                     <td><a href="{% url 'uptadeMovementFinancer' item.id %}"><img src="{% static 'images/edit.svg' %}" alt=""></a>
                         <a onclick="deleteMovement('{{ item.id }}','{{ item.description }}')"><img src="{% static 'images/delete.svg' %}" alt=""></a>
-                    {% if item.file %}<a href="#"><img src="{% static 'images/file.svg' %}" alt=""></a> 
+                    {% if item.file %}<href="javascript:void(0);" onclick="window.open('{{ item.file.url }}', '_blank')"><img src="{% static 'images/file.svg' %}" alt="abir ficheiro" target="_blank"></a> 
                     {% endif %}
                 </td>
                 </tr>
@@ -106,7 +106,7 @@ Lista de Movimentos
                 <td>
                     <a href="{% url 'uptadeMovementFinancer' expense.id %}"><img src="{% static 'images/edit.svg' %}" alt=""></a>
                     <a onclick="deleteMovement('{{ expense.id }}','{{ expense.description }}')"><img src="{% static 'images/delete.svg' %}" alt=""></a>
-                    {% if expense.file %} <a href="#"><img src="{% static 'images/file.svg' %}" alt=""></a> 
+                    {% if expense.file %} <href="javascript:void(0);" onclick="window.open('{{ expense.file.url }}', '_blank')"><img src="{% static 'images/file.svg' %}" alt="abir ficheiro" target="_blank"></a>
                     {% endif %}
                 </td>
             </tr>

@@ -12,6 +12,7 @@ class TableIRS(models.Model):
 class Employee(models.Model):
     name = models.CharField(max_length=100, verbose_name="Nome")
     security_system = models.FloatField(default=0.11, verbose_name="Seg Social")
+    TSU = models.FloatField(default=0.11, verbose_name="TSU")
     salary = models.FloatField(validators=[MinValueValidator(0)], verbose_name="Saláro")
     hours = models.IntegerField(default=20,validators=[MinValueValidator(0)], verbose_name="Horas")
     Irs = models.ManyToManyField(TableIRS,verbose_name="IRS")

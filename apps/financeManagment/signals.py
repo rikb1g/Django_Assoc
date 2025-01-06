@@ -17,9 +17,12 @@ def delete_file(sender, instance, **kwargs):
 @receiver(pre_save, sender=FinanceMovements)
 def delete_old_file_on_update(sender, instance, **kwargs):
     if instance.pk:
-        old_instance= FinanceMovements.objects.get(pk=instance.pk)
+        try:
+            old_instance= FinanceMovements.objects.get(pk=instance.pk)
         
-        if old_instance.file != instance.file:
-            if old_instance.file:
-                if default_storage.exists(old_instance.file):
-                    default_storage.delete(old_instance.file.path)
+            if old_instance.file and old_instance.file != instance.file:
+                old_file_path = old_instance.file.path
+                if default_storage.exists(old_file_path):
+                    default_storage.delete(old_file_path)
+        except FinanceMovements.DoesNotExist():
+            pass
