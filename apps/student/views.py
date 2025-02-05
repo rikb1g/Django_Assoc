@@ -202,10 +202,6 @@ def month_payment_global(request):
     next_year = list_year[1]
     current_month = datetime.now().strftime("%B")
     print(current_month)
-
-
-    
-
     months_current_year = [x for x in range(9,13)]
     months_next_year = [x for x in range(1,9)]
 
@@ -251,22 +247,22 @@ def insert_fee(request):
             try:
                 finance_moviment_exist = FinanceMovements.objects.get(description=f"{fee_id},{fee.student},{fee.payment_date}")
                 print(finance_moviment_exist)
-
-                finance_moviment_exist.value = fee.value
-                finance_moviment_exist.save()
+                if finance_moviment_exist.value is not 0.00:
+                    finance_moviment_exist.value = fee.value
+                    finance_moviment_exist.save()
                 print("salvou")
 
             except FinanceMovements.DoesNotExist:
-                print("deu erro")
-                finance = FinanceMovements.objects.create(
-                    moviment= moviment_type,
-                    category= category_type,   
-                    description=f"{fee_id},{fee.student},{fee.payment_date}",
-                    date = fee.payment_date,
-                    value=value_fee,
-                    school= fee.school,
-                )
-                finance.save()
+                if value_fee is not 0.00:
+                    finance = FinanceMovements.objects.create(
+                        moviment= moviment_type,
+                        category= category_type,
+                        description=f"{fee_id},{fee.student},{fee.payment_date}",
+                        date = fee.payment_date,
+                        value=value_fee,
+                        school= fee.school,
+                    )
+                    finance.save()
                 return JsonResponse({'success': True})        
                 
             except Exception as e:
