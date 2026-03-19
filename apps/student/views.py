@@ -1,9 +1,10 @@
 import json
 from django.db.models.query import QuerySet
+from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Student, TypeFee,MonthlyPayment
@@ -56,39 +57,63 @@ class StudentHistoric(ListView):
 
         if school:
             return Student.objects.filter(school=school, active=False)
-    
-    
-        
-    
+
+
 class StudentCreate(CreateView):
     model = Student
     form_class = StudentForm
+    template_name = 'student/student_form.html'
+    success_url = reverse_lazy('students_list')  # ajusta para o nome correto da tua URL
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['school'] = self.request.user.user.school
         return kwargs
-    
+
     def form_valid(self, form):
-        student = form.save(commit=False)
-        student.school = self.request.user.user.school
-        student.save()
-        FinanceMovements.objects.creat()
-        
-        return super().form_valid(form)
-    
+        self.object = form.save(commit=False)
+        self.object.school = self.request.user.user.school
+        self.object.save()
+
+        # Só cria movimento financeiro se fizer sentido no teu fluxo.
+        # Ajusta a categoria/valor/descrição conforme o teu projeto.
+        income_type, _ = TypeFinanceMoviment.objects.get_or_create(name='income')
+
+        # Exemplo: tenta obter a categoria "mensalidades".
+        category = CategoryFinanceMoviment.objects.filter(
+            name='mensalidades'
+        ).first()
+
+        FinanceMovements.objects.create(
+            school=self.request.user.user.school,
+            moviment=income_type,
+            category=category,
+            value=0,
+            description=f'Criação do aluno {self.object}',
+        )
+
+        return HttpResponseRedirect(self.get_success_url())
+
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
-    
-class StudentUpdate(CreateView):
+
+
+class StudentUpdate(UpdateView):
     model = Student
     form_class = StudentForm
+    template_name = 'student/student_form.html'
+    success_url = reverse_lazy('students_list')  # ajusta para o nome correto da tua URL
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['school'] = self.request.user.user.school
         return kwargs
-    
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.school = self.request.user.user.school
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 class TypeFeeCreate(CreateView):
     model = TypeFee
     form_class = TypeFeeForm
