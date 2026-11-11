@@ -1,3 +1,5 @@
+from tabnanny import verbose
+
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.urls import reverse
@@ -21,11 +23,19 @@ class TypeFee(models.Model):
 
 
 class Student(models.Model):
+    YEAR_CHOICES = [
+        (f"{year}/{year + 1}", f"{year}/{year + 1}") for year in range(2024, 2034)
+    ]
+    entry_year = models.CharField(max_length=4, verbose_name= "Ano de entrada",blank=True, null=True)
     name = models.CharField(max_length=100, verbose_name="Nome")
-    entry_year = models.IntegerField(verbose_name="Ano de Matrícula")
-    out_year = models.IntegerField(blank=True, null=True, verbose_name="Ano de saída")
+    scholl_year = models.CharField(
+        max_length=9,
+        choices=YEAR_CHOICES,
+        verbose_name="Ano letivo",blank=True, null=True
+    )
     school = models.ForeignKey(School, on_delete=models.CASCADE)
-    education_officer = models.CharField(max_length=100, verbose_name="Nome Encarregado de educação")
+    education_officer = models.CharField(max_length=100, verbose_name="Nome Encarregado de educação",blank=True, null=True)
+    nif = models.CharField(max_length=9, verbose_name="Nif", blank= True,null=True)
     phone_numeber_officer = models.CharField(max_length=100, verbose_name="Contacto Enc Educação")
     activity = models.ManyToManyField(Activities, blank=True, verbose_name="Atividade")
     fee = models.ManyToManyField(TypeFee, verbose_name="Mensalidade")

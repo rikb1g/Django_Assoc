@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 {% load static %}
 
@@ -8,12 +9,11 @@
 {% endblock %}
 
 {% block title_page %}
-Lista de Movimentos 
+Lista de Movimentos
 {% endblock %}
 
-
 {% block search %}
-<label for="filterMonth" class="fs-9">Filtrar por mês: </label>
+<label for="filterMonth" class="fs-9">Filtrar por mês:</label>
 <select id="filterMonth" class="form-select-sm">
     <option value="">Todos</option>
     <option value="September {{school_year}}">Setembro</option>
@@ -31,94 +31,175 @@ Lista de Movimentos
 </select>
 {% endblock %}
 
-
-
 {% block main %}
-<div class="container d-flex flex-column align-items-center">
-    <h2 class="mt-3" >Receitas</h2>
 
-    <table class="table mt-3" >
-        <thead>
-            <tr>
-                <th>Categoria</th>
-                <th>Fatura nº</th>
-                <th>Descrição</th>
-                <th>Data</th>
-                <th>Valor</th>
-                <th>Operações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in income_per_month %}
-            {% if item.total %}
-                <!-- Linha para o total agregado de 'mensalidades' -->
-                <tr class="table-Fees-Movements" data-month="{{ item.month|date:'F Y' }}">
-                    <td>Mensalidades</td>
-                    <td>-</td>
-                    <td>Total do Mês</td>
-                    <td>{{ item.month|date:"F Y" }}</td>
-                    <td>{{ item.total }}</td>
-                    <td>-</td>
-                </tr>
-            {% else %}
-                <!-- Linha para itens individuais de outras categorias -->
-                <tr class="table-Income" data-month="{{ item.date|date:'F Y'}}">
-                    <td>{{ item.category.name }}</td>
-                    <td>{{ item.billing_number }}</td>
-                    <td>{{ item.description }}</td>
-                    <td>{{ item.date|date:"F j, Y" }}</td>
-                    <td>{{ item.value }}</td>
-                    <td><a href="{% url 'uptadeMovementFinancer' item.id %}"><img src="{% static 'images/edit.svg' %}" alt=""></a>
-                        <a onclick="deleteMovement('{{ item.id }}','{{ item.description }}')"><img src="{% static 'images/delete.svg' %}" alt=""></a>
-                    {% if item.file %}<href="javascript:void(0);" onclick="window.open('{{ item.file.url }}', '_blank')"><img src="{% static 'images/file.svg' %}" alt="abir ficheiro" target="_blank"></a> 
-                    {% endif %}
-                </td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-        </tbody>
+<div class="container">
 
-    </table>
+    <!-- RESUMO FINANCEIRO -->
+    <div class="mt-4 mb-4">
+
+        <h4 class="mb-3 text-center">Resumo Financeiro</h4>
+
+        <div class="row g-3">
+
+            <!-- RECEITAS -->
+            <div class="col-12 col-md-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
+                            <i class="bi bi-arrow-down-circle text-success fs-3"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted">Total de Receitas</small>
+                            <h4 class="mb-0 text-success fw-bold" id="totalIncome">0,00 €</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DESPESAS -->
+            <div class="col-12 col-md-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="rounded-circle bg-danger bg-opacity-10 p-3 me-3">
+                            <i class="bi bi-arrow-up-circle text-danger fs-3"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted">Total de Despesas</small>
+                            <h4 class="mb-0 text-danger fw-bold" id="totalExpenses">0,00 €</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SALDO -->
+            <div class="col-12 col-md-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                            <i class="bi bi-wallet2 text-primary fs-3"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted">Saldo</small>
+                            <h4 class="mb-0 fw-bold text-success" id="balance">0,00 €</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
     <hr>
 
-    <h2 class="mt-3" >Despesas</h2>
+    <!-- RECEITAS -->
+    <h2 class="mt-3 text-center">Receitas</h2>
 
-    <table class="table mt-3" id="tableExpense">
-        <thead>
-            <tr>
-                <th>Categoria</th>
-                <th>Fatura nº</th>
-                <th>Descrição</th>
-                <th>Data</th>
-                <th>Valor</th>
-                <th>Operações</th>
-            </tr>
-        </thead>
-        <tbody>
-                {% for expense in  expense_per_month %}
-            <tr class="table-expense" data-month="{{ expense.date|date:'F Y'}}">
-                <td>{{expense.category}}</td>
-                <td>{{expense.billing_number}}</td>
-                <td>{{expense.description}}</td>
-                <td>{{expense.date|date:"F j, Y" }}</td>
-                <td>{{expense.value}}</td>
-                <td>
-                    <a href="{% url 'uptadeMovementFinancer' expense.id %}"><img src="{% static 'images/edit.svg' %}" alt=""></a>
-                    <a onclick="deleteMovement('{{ expense.id }}','{{ expense.description }}')"><img src="{% static 'images/delete.svg' %}" alt=""></a>
-                    {% if expense.file %} <href="javascript:void(0);" onclick="window.open('{{ expense.file.url }}', '_blank')"><img src="{% static 'images/file.svg' %}" alt="abir ficheiro" target="_blank"></a>
+    <div class="table-responsive">
+        <table class="table table-hover mt-3">
+            <thead>
+                <tr>
+                    <th>Categoria</th>
+                    <th>Fatura nº</th>
+                    <th>Descrição</th>
+                    <th>Data</th>
+                    <th>Valor</th>
+                    <th>Operações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in income_per_month %}
+
+                    {% if item.total %}
+                    <tr class="table-Fees-Movements"
+                        data-month="{{ item.month|date:'F Y' }}" data-value="{{ item.total }}">
+                        <td>Mensalidades</td>
+                        <td>-</td>
+                        <td>Total do Mês</td>
+                        <td>{{ item.month|date:"F Y" }}</td>
+                        <td >{{ item.total }}</td>
+                        <td>-</td>
+                    </tr>
+
+                    {% else %}
+                    <tr class="table-Income"
+                        data-month="{{ item.date|date:'F Y' }}" data-value="{{ item.value }}">
+                        <td>{{ item.category.name }}</td>
+                        <td>{{ item.billing_number }}</td>
+                        <td>{{ item.description }}</td>
+                        <td>{{ item.date|date:"d/m/Y" }}</td>
+                        <td>{{ item.value }}</td>
+                        <td>
+                            <a href="{% url 'uptadeMovementFinancer' item.id %}">
+                                <img src="{% static 'images/edit.svg' %}" alt="Editar">
+                            </a>
+
+                            <a onclick="deleteMovement('{{ item.id }}','{{ item.description }}')">
+                                <img src="{% static 'images/delete.svg' %}" alt="Eliminar">
+                            </a>
+
+                            {% if item.file %}
+                            <a href="{{ item.file.url }}" target="_blank">
+                                <img src="{% static 'images/file.svg' %}" alt="Abrir ficheiro">
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
                     {% endif %}
-                </td>
-            </tr>
 
-            {% endfor %}
-        </tbody>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-    </table>
+    <hr>
 
+    <!-- DESPESAS -->
+    <h2 class="mt-3 text-center">Despesas</h2>
 
+    <div class="table-responsive">
+        <table class="table table-hover mt-3" id="tableExpense">
+            <thead>
+                <tr>
+                    <th>Categoria</th>
+                    <th>Fatura nº</th>
+                    <th>Descrição</th>
+                    <th>Data</th>
+                    <th>Valor</th>
+                    <th>Operações</th>
+                </tr>
+            </thead>
 
+            <tbody>
+                {% for expense in expense_per_month %}
+                <tr class="table-expense"
+                    data-month="{{ expense.date|date:'F Y' }}" data-value="{{ expense.value }}">
+                    <td>{{ expense.category }}</td>
+                    <td>{{ expense.billing_number }}</td>
+                    <td>{{ expense.description }}</td>
+                    <td>{{ expense.date|date:"d/m/Y" }}</td>
+                    <td >{{ expense.value }}</td>
+                    <td>
+                        <a href="{% url 'uptadeMovementFinancer' expense.id %}">
+                            <img src="{% static 'images/edit.svg' %}" alt="Editar">
+                        </a>
 
+                        <a onclick="deleteMovement('{{ expense.id }}','{{ expense.description }}')">
+                            <img src="{% static 'images/delete.svg' %}" alt="Eliminar">
+                        </a>
+
+                        {% if expense.file %}
+                        <a href="{{ expense.file.url }}" target="_blank">
+                            <img src="{% static 'images/file.svg' %}" alt="Abrir ficheiro">
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 </div>
 
@@ -127,6 +208,6 @@ Lista de Movimentos
     const closeImageUrl = "{% static 'images/close.svg' %}";
 </script>
 
+<script src="{% static 'js/movements.js' %}?v=1.0"></script>
 
-<script src="{% static '/js/movements.js' %}?v=1.0"></script>
 {% endblock %}

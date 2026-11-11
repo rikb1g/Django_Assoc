@@ -16,13 +16,15 @@ class StudentForm(forms.ModelForm):
     
     class Meta:
         model = Student
-        fields = ['name','entry_year', 'education_officer','phone_numeber_officer','activity','fee' ]
+        fields = ['name','entry_year','scholl_year','education_officer','nif','phone_numeber_officer','activity','fee' ]
 
         widgets= {
             'name': forms.TextInput(attrs={'class':'form-control'}),
             'entry_year': forms.TextInput(attrs={'class':'form-control'}),
+            'scholl_year': forms.Select(attrs={'class':'form-control'}),
             'education_officer': forms.TextInput(attrs={'class':'form-control'}),
             'phone_numeber_officer': forms.TextInput(attrs={'class':'form-control'}),
+            "nif": forms.TextInput(attrs={'class':'form-control'}),
             'activity': forms.SelectMultiple(attrs={'class':'form-control'}),
             'fee': forms.SelectMultiple(attrs={'class':'form-control'}),
         }

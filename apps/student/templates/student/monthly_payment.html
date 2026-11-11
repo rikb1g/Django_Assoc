@@ -6,9 +6,8 @@
 
 
 {% block nav %}
-<a href="{% url 'fees_global' %}" class="btn-nav">Gerir Mensalidades</a>
-<a href="#" class="btn-nav">Nova Mensalidade</a>
-<a href="#" class="btn-nav">Mensalidades em Atraso</a>
+
+<a href="#" class="btn-nav">Mensalidades</a>
 {% endblock %}
 
 
@@ -66,6 +65,7 @@ Mensalidades
                 <td><input type="checkbox" name="paga" id="isPaid_{{mensalidade.id}}" {% if mensalidade.isPaid %}checked{% endif %} class="nao-alteravel"></td>
                 {% if mensalidade.isPaid  %}
                 <td id="imageTdOPe_{{mensalidade.id}}"><a onclick="uptdateFee('{{mensalidade.id}}')" href="#"><img src="{% static 'images/edit.svg'%}" alt="editar"></a></td>
+                <td id="imageTdOPe_{{mensalidade.id}}"><a href="#"><img src="{% static 'images/receipt.svg'%}" alt="recibo"></a></td>
                 {% else %}
                 <td id="imageCheck_{{mensalidade.id}}"><a href="#" onclick="checkfee('{{mensalidade.id}}')"><img src="{% static 'images/check.svg' %}" alt=""></a></td>
                 {% endif %}

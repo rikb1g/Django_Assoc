@@ -75,6 +75,8 @@ class StudentCreate(CreateView):
         self.object.school = self.request.user.user.school
         self.object.save()
 
+        form.save_m2m()
+
         # Só cria movimento financeiro se fizer sentido no teu fluxo.
         # Ajusta a categoria/valor/descrição conforme o teu projeto.
         income_type, _ = TypeFinanceMoviment.objects.get_or_create(name='income')
@@ -156,7 +158,8 @@ def edit_student(request, student_id):
     student_data = {
         'name': student.name,
         'entry_year': student.entry_year,
-        'out_year': student.out_year,
+        'school_year': student.scholl_year,
+        'nif': student.nif,
         'education_officer': student.education_officer,
         'phone_numeber_officer': student.phone_numeber_officer,
         'activity': list(student.activity.values_list('id', flat=True)),
@@ -333,6 +336,8 @@ def remove_fee(request):
         return JsonResponse({'success': True})
     
     return JsonResponse({'success': False, 'error': 'Método não permitido.'})
+
+
 
 
         

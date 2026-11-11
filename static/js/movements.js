@@ -1,41 +1,59 @@
 
 
 
-function applyFilterTabe(selectedMonth){
-    const rowsFees = document.querySelectorAll('.table-Fees-Movements')
-    const rowsMovements = document.querySelectorAll('.table-Income')
-    const rowsExpenses = document.querySelectorAll('.table-expense')
 
-    rowsFees.forEach(row => {
-        const rowMonth = row.getAttribute("data-month")
-        console.log(rowMonth)
+function applyFilterTabe(selectedMonth) {
+    const rowsFees = document.querySelectorAll('.table-Fees-Movements');
+    const rowsMovements = document.querySelectorAll('.table-Income');
+    const rowsExpenses = document.querySelectorAll('.table-expense');
 
-        if (selectedMonth === "" || rowMonth.includes( selectedMonth)){
-            row.style.display = "";
-        }else{
-            row.style.display = 'none'
-        }
-    })
-    rowsMovements.forEach(row => {
-        const rowMonth = row.getAttribute("data-month")
+    let totalIncome = 0;
+    let totalExpenses = 0;
 
-        if (selectedMonth === "" || rowMonth.includes(selectedMonth)){
-            row.style.display = "";
-        }else{
-            row.style.display = 'none'
-        }
-    })
-    rowsExpenses.forEach(row => {
-        const rowMonth = row.getAttribute("data-month")
-        console.log(rowMonth)
+    const filterRows = (rows, callback) => {
+        rows.forEach(row => {
+            const rowMonth = row.dataset.month;
 
-        if (selectedMonth === "" || rowMonth.includes( selectedMonth)){
-            row.style.display = "";
-        }else{
-            row.style.display = 'none'
-        }
-    })
+            if (selectedMonth === "" || rowMonth === selectedMonth) {
+                row.style.display = "";
+                callback(Number(row.dataset.value || 0));
+            } else {
+                row.style.display = "none";
+            }
+        });
+    };
+
+    filterRows(rowsFees, value => {
+        totalIncome += value;
+    });
+
+    filterRows(rowsMovements, value => {
+        totalIncome += value;
+    });
+
+    filterRows(rowsExpenses, value => {
+        totalExpenses += value;
+    });
+
+    const balance = totalIncome - totalExpenses;
+
+    const formatter = new Intl.NumberFormat('pt-PT', {
+        style: 'currency',
+        currency: 'EUR'
+    });
+
+    document.getElementById('totalIncome').textContent = formatter.format(totalIncome);
+    document.getElementById('totalExpenses').textContent = formatter.format(totalExpenses);
+    document.getElementById('balance').textContent = formatter.format(balance);
 }
+
+document.getElementById('filterMonth').addEventListener('change', function() {
+    applyFilterTabe(this.value);
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    applyFilterTabe(document.getElementById('filterMonth').value);
+});
 
 
 

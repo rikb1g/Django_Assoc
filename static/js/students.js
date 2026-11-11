@@ -29,8 +29,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Preenche os campos do formulário com os dados do aluno
                     document.getElementById('studentName').value = data.name;
                     document.getElementById('studentEntryYear').value = data.entry_year;
+                    document.getElementById('studentSchollYear').value = data.scholl_year;
+                    document.getElementById('studentNif').value = data.nif;
                     document.getElementById('studenteducationOfficer').value = data.education_officer;
                     document.getElementById('studentphoneNumeberOfficer').value = data.phone_numeber_officer;
+
+                    
 
                     // Limpa as opções previamente selecionadas no select de atividades
                     const activitySelect = document.getElementById('activitySelect');

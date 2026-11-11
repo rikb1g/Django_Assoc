@@ -86,7 +86,7 @@ function checkfee(mensalidadeID){
     .then(response => response.json())
     .then(data => {
         if (data.success){           
-            alert("Mensalidade atualizada com sucesso")
+            
             studentValue.innerHTML = ''
             tdStudentValue.innerHTML = ''
             const pValue = document.createElement('p')
@@ -136,7 +136,7 @@ function exitUpdateFee(mensalidadeID){
     .then(response => response.json())
     .then(data => {
         if (data.success){
-            alert("Mensalidade atualizada com sucesso")
+            // colocar ajax para nao recarregar a pagina
             location.reload()
         } 
         else{

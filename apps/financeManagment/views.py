@@ -202,12 +202,22 @@ def finance_moviments_list(request):
         Q(date__year=year, date__month__in=months_current_year) |
         Q(date__year=next_year, date__month__in=months_next_year)
     )
+    print(expense_month)
+    total_expense = FinanceMovements.objects.filter(
+        Q(school=request.user.user.school),
+        Q(moviment__name="expense"),
+        Q(date__year=year, date__month__in=months_current_year) |
+        Q(date__year=next_year, date__month__in=months_next_year)
+    ).aggregate(Sum('value'))
+
+    #total_income = income_others.aggregate(Sum('value')) + fees_income.aggregate(Sum('value'))
 
     context = {
         'income_per_month': combined_movements,
         'expense_per_month': expense_month,
         'school_year': list_year[0],
         'school_year_next': list_year[1],
+        'total_expense': total_expense,
     }
 
 
